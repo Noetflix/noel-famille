@@ -19,7 +19,7 @@ export const FIREBASE_CONFIG = {
 // - color : couleur de la pastille ; ink : couleur du texte dessus (sombre si la couleur est claire)
 // - emoji : facultatif, remplace l'initiale dans la pastille
 export const MEMBERS = [
-  { id: 'rflix', name: 'rflix', email: 'romain.flix@noel-flix.fr', color: '#D62839', ink: '#FFFFFF', admin: true },
+  { id: 'roro', name: 'roro', email: 'romain.flix@noel-flix.fr', color: '#D62839', ink: '#FFFFFF', admin: true },
   { id: 'papa', name: 'Papa', email: 'papa@noel-flix.fr', color: '#2B6F94', ink: '#FFFFFF' },
   { id: 'maman', name: 'Maman', email: 'maman@noel-flix.fr', color: '#F2B134', ink: '#24302A' },
   { id: 'max', name: 'Max', email: 'max@noel-flix.fr', color: '#6E4596', ink: '#FFFFFF' },

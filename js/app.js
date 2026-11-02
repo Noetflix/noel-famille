@@ -203,6 +203,7 @@ const state = {
   me: null,
   wishes: [],
   loaded: false,
+  loadError: null, // code d'erreur Firestore si la lecture des listes échoue
   bought: {}, // email du destinataire -> Map(idSouhait -> { buyer, at })
   unsubs: [],
   seenBefore: 0, // dernière visite de la liste ouverte, figée le temps de la consulter
@@ -233,8 +234,10 @@ function startData() {
     state.loaded = true;
     render();
   }, (err) => {
+    // Sans ça, l'écran resterait bloqué sur « Le lutin déballe les listes… ».
     console.error(err);
-    toast('Impossible de lire les listes. Le lutin a glissé sur le verglas.', { error: true });
+    state.loadError = err.code || 'inconnue';
+    render();
   }));
 
   for (const person of others()) {
@@ -251,6 +254,21 @@ function stopData() {
   state.wishes = [];
   state.bought = {};
   state.loaded = false;
+  state.loadError = null;
+}
+
+function loadingView(text) {
+  if (!state.loadError) return `<p class="empty">${text}</p>`;
+  const hint = state.loadError === 'permission-denied'
+    ? `Firestore refuse la lecture : les règles publiées ne reconnaissent pas le compte ${esc(state.me.email)}.`
+    : 'Vérifie ta connexion internet puis recharge la page.';
+  return `
+    <div class="empty load-error" role="alert">
+      <p>Le lutin n'arrive pas à ouvrir les listes 😬</p>
+      <p class="load-error__hint">${hint}</p>
+      <p class="load-error__code">Erreur : ${esc(state.loadError)}</p>
+      <button type="button" class="pill-btn" data-action="reload">Réessayer</button>
+    </div>`;
 }
 
 // ---------- Connexion (F1) ----------
@@ -462,7 +480,7 @@ function topBar(view) {
 
 function tabsView(view) {
   const body = !state.loaded
-    ? '<p class="empty">Le lutin déballe les listes…</p>'
+    ? loadingView('Le lutin déballe les listes…')
     : view === 'family' ? familyView() : mineView();
   return `${topBar(view)}<main class="main">${body}</main>`;
 }
@@ -587,7 +605,7 @@ function personView(person) {
     </header>
     <main class="main">
       <p class="hush">${ICONS.lock}<span>Chut ! ${esc(person.name)} ne voit pas les coches « Acheté ».</span></p>
-      ${state.loaded ? list : '<p class="empty">Le lutin déballe la liste…</p>'}
+      ${state.loaded ? list : loadingView('Le lutin déballe la liste…')}
     </main>`;
 }
 
@@ -722,6 +740,7 @@ document.addEventListener('click', (e) => {
       break;
     case 'snow': toggleSnow(target); break;
     case 'logout': logout(); break;
+    case 'reload': location.reload(); break;
     case 'add': openSheet(); break;
     case 'edit': openSheet(state.wishes.find((w) => w.id === id)); break;
     case 'delete': removeWish(id); break;

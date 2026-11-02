@@ -388,6 +388,9 @@ body.no-snow .snow { display: none; }
   font-family: var(--title); font-weight: 600; font-size: 18px; color: var(--cream);
 }
 .empty .gif { max-height: 200px; }
+.empty p { margin: 0; }
+.load-error__hint { font-family: var(--body); font-size: 15px; font-weight: 700; color: #E6EFE9; }
+.load-error__code { font-family: var(--body); font-size: 13px; font-weight: 700; color: var(--gold); }
 
 /* ---------- La famille ---------- */
 
