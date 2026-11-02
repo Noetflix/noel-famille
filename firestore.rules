@@ -1,0 +1,71 @@
+rules_version = '2';
+
+// Matrice des droits (specs, section « Accès et sécurité ») :
+// - souhaits : lecture par les 6 membres, écriture par leur propriétaire seulement ;
+// - coches « Acheté » : invisibles pour le destinataire du souhait, posées et retirées
+//   uniquement par l'acheteur ;
+// - comptes et PIN : gérés dans la console Firebase, aucun accès depuis le site.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Doit correspondre aux e-mails de js/config.js (en minuscules).
+    function members() {
+      return [
+        'romain.flix@noel-flix.fr',
+        'prenom1@noel-flix.fr',
+        'prenom2@noel-flix.fr',
+        'prenom3@noel-flix.fr',
+        'prenom4@noel-flix.fr',
+        'prenom5@noel-flix.fr'
+      ];
+    }
+
+    function me() {
+      return request.auth.token.email;
+    }
+
+    function isMember() {
+      return request.auth != null && me() in members();
+    }
+
+    function validWish(d) {
+      let fields = ['owner', 'title', 'details', 'link', 'price', 'priority', 'createdAt', 'updatedAt'];
+      return d.keys().hasOnly(fields) && d.keys().hasAll(fields)
+        && d.title is string && d.title.size() > 0 && d.title.size() <= 120
+        && d.details is string && d.details.size() <= 1000
+        && d.link is string && d.link.size() <= 1000
+        && (d.link == '' || d.link.matches('https?://.+'))
+        && (d.price == null || (d.price is number && d.price >= 0 && d.price <= 100000))
+        && (d.priority == null || d.priority in [1, 2, 3])
+        && d.updatedAt == request.time;
+    }
+
+    match /wishes/{wishId} {
+      allow read: if isMember();
+      allow create: if isMember()
+        && request.resource.data.owner == me()
+        && request.resource.data.createdAt == request.time
+        && validWish(request.resource.data);
+      allow update: if isMember()
+        && resource.data.owner == me()
+        && request.resource.data.owner == resource.data.owner
+        && request.resource.data.createdAt == resource.data.createdAt
+        && validWish(request.resource.data);
+      allow delete: if isMember() && resource.data.owner == me();
+    }
+
+    // Une coche par souhait, rangée sous le destinataire pour pouvoir la lui cacher.
+    // Pas de règle « update » : impossible d'écraser la coche de quelqu'un d'autre.
+    match /gifts/{recipient}/bought/{wishId} {
+      allow read: if isMember() && recipient != me();
+      allow create: if isMember()
+        && recipient != me()
+        && recipient in members()
+        && request.resource.data.keys().hasOnly(['buyer', 'at'])
+        && request.resource.data.buyer == me()
+        && request.resource.data.at == request.time
+        && get(/databases/$(database)/documents/wishes/$(wishId)).data.owner == recipient;
+      allow delete: if isMember() && recipient != me() && resource.data.buyer == me();
+    }
+  }
+}
