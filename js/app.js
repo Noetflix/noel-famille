@@ -108,14 +108,15 @@ function avatar(m, size = 'md', extra = '') {
   return `<span class="avatar avatar--${size} ${extra}" style="--c:${esc(m.color)};--ink-c:${esc(m.ink || '#FFFFFF')}" aria-hidden="true">${esc(letter)}</span>`;
 }
 
+// Festons de 56 px : le creux du fil est en (28, 13), l'ampoule y est accrochée.
+// Assez de festons pour un grand écran, le surplus est coupé et centré.
 function garland() {
-  const colors = ['gold', 'red', 'cream'];
-  const count = 9;
-  let bulbs = '';
-  for (let i = 0; i < count; i += 1) {
-    bulbs += `<span class="bulb bulb--${colors[i % 3]}" style="left:${((i + 0.5) * 100) / count}%;top:${i % 2 ? 18 : 15}px;animation-delay:-${((i * 0.37) % 1.8).toFixed(2)}s"></span>`;
+  const colors = ['gold', 'red', 'blue', 'cream'];
+  let swags = '';
+  for (let i = 0; i < 24; i += 1) {
+    swags += `<svg viewBox="0 0 56 44"><path class="garland__wire" d="M0 4 Q28 22 56 4"/><rect class="garland__cap" x="25" y="11" width="6" height="5" rx="1"/><ellipse class="bulb bulb--${colors[i % 4]}" cx="28" cy="22" rx="5" ry="7" style="animation-delay:-${((i * 0.43) % 1.8).toFixed(2)}s"/></svg>`;
   }
-  return `<div class="garland" aria-hidden="true"><svg viewBox="0 0 390 40" preserveAspectRatio="none"><path vector-effect="non-scaling-stroke" d="M-5 6 Q 40 28 85 10 T 175 10 T 265 10 T 355 10 T 400 12"/></svg>${bulbs}</div>`;
+  return `<div class="garland" aria-hidden="true">${swags}</div>`;
 }
 
 // GIF tiré au hasard, une fois par emplacement et par visite :
@@ -298,7 +299,7 @@ function renderLogin() {
         <div class="who" role="radiogroup" aria-labelledby="who-label">
           ${MEMBERS.map((m) => `
             <button type="button" class="who__btn" role="radio" aria-checked="${m.id === selected}" data-action="pick" data-id="${esc(m.id)}">
-              ${avatar(m)}<span>${esc(m.name)}</span>
+              ${avatar(m, 'md', 'avatar--bauble')}<span>${esc(m.name)}</span>
             </button>`).join('')}
         </div>
         <label class="label-big" for="pin-0">Ton code secret</label>
@@ -519,7 +520,7 @@ function familyView() {
     return `
       <a class="person-card" href="#personne/${esc(person.id)}">
         ${fresh ? `<span class="badge-new">${fresh} nouveau${fresh > 1 ? 'x' : ''}</span>` : ''}
-        ${avatar(person, 'lg')}
+        ${avatar(person, 'lg', 'avatar--bauble')}
         <span class="person-card__name">${esc(person.name)}</span>
         ${wishes.length
           ? `<span class="person-card__count">${plural(wishes.length, 'souhait')}</span>`
