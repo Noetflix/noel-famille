@@ -30,7 +30,7 @@ HTML/CSS/JavaScript simples, sans build, hébergés sur GitHub Pages ; connexion
 2. **Authentication** → Commencer → Méthode de connexion → activer **Adresse e-mail/Mot de passe**.
 3. **Authentication → Paramètres → Actions utilisateur** : décocher **Activer la création (inscription)**. Sans ça, n'importe qui pourrait se créer un compte avec la clé publique (les règles le bloqueraient quand même, mais autant fermer la porte).
 4. **Authentication → Utilisateurs → Ajouter un utilisateur**, 6 fois :
-   e-mail technique (ex. `maman@noel-flix.fr`) + PIN à 6 chiffres comme mot de passe.
+   e-mail technique (ex. `maman@noel-flix.fr`) + PIN à 8 chiffres (date de naissance JJMMAAAA) comme mot de passe.
 5. **Firestore Database** → Créer une base → mode **production**, région `eur3 (europe-west)`.
 6. **Firestore → Règles** : coller le contenu de `firestore.rules`, en remplaçant la liste `members()` par les 6 e-mails, puis **Publier**.
 7. **Paramètres du projet** (roue dentée) → Vos applications → icône **Web `</>`** → enregistrer l'appli (sans Hosting) → copier l'objet `firebaseConfig`.

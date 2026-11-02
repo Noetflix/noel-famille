@@ -254,6 +254,7 @@ function stopData() {
 
 // ---------- Connexion (F1) ----------
 
+const PIN_LENGTH = 8; // date de naissance JJMMAAAA
 const LOCK_MAX_FAILS = 5;
 const LOCK_MINUTES = 5;
 
@@ -281,8 +282,8 @@ function renderLogin() {
   document.body.classList.add('is-login');
   sheetHost.innerHTML = '';
   const selected = store.get('dernier-prenom', null);
-  const pinBoxes = Array.from({ length: 6 }, (_, i) =>
-    `<input id="pin-${i}" class="pin__box" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Chiffre ${i + 1} sur 6">`).join('');
+  const pinBoxes = Array.from({ length: PIN_LENGTH }, (_, i) =>
+    `<input id="pin-${i}" class="pin__box" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="Chiffre ${i + 1} sur ${PIN_LENGTH}">`).join('');
 
   root.innerHTML = `
     <section class="login">
@@ -326,7 +327,7 @@ function setupPinInputs() {
       const digits = box.value.replace(/\D/g, '');
       if (digits.length > 1) {
         // Collage ou remplissage automatique : on répartit les chiffres.
-        digits.slice(0, 6 - i).split('').forEach((d, k) => { boxes[i + k].value = d; });
+        digits.slice(0, PIN_LENGTH - i).split('').forEach((d, k) => { boxes[i + k].value = d; });
       } else {
         box.value = digits;
       }
@@ -343,7 +344,7 @@ function setupPinInputs() {
         e.preventDefault();
       } else if (e.key === 'ArrowLeft' && i > 0) {
         boxes[i - 1].focus();
-      } else if (e.key === 'ArrowRight' && i < 5) {
+      } else if (e.key === 'ArrowRight' && i < PIN_LENGTH - 1) {
         boxes[i + 1].focus();
       }
     });
@@ -373,7 +374,7 @@ async function submitLogin(form) {
   const remaining = lockRemaining();
   if (remaining) { failLogin(lockMessage(remaining)); return; }
   if (!person) { error.textContent = 'Dis-nous d\'abord qui tu es 👆'; return; }
-  if (!/^\d{6}$/.test(pin)) { error.textContent = 'Le code fait 6 chiffres.'; return; }
+  if (pin.length !== PIN_LENGTH) { error.textContent = `Le code fait ${PIN_LENGTH} chiffres.`; return; }
 
   error.textContent = '';
   button.disabled = true;
