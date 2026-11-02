@@ -20,11 +20,11 @@ export const FIREBASE_CONFIG = {
 // - emoji : facultatif, remplace l'initiale dans la pastille
 export const MEMBERS = [
   { id: 'rflix', name: 'rflix', email: 'romain.flix@noel-flix.fr', color: '#D62839', ink: '#FFFFFF', admin: true },
-  { id: 'prenom1', name: 'Prénom 1', email: 'prenom1@noel-flix.fr', color: '#2B6F94', ink: '#FFFFFF' },
-  { id: 'prenom2', name: 'Prénom 2', email: 'prenom2@noel-flix.fr', color: '#F2B134', ink: '#24302A' },
-  { id: 'prenom3', name: 'Prénom 3', email: 'prenom3@noel-flix.fr', color: '#6E4596', ink: '#FFFFFF' },
-  { id: 'prenom4', name: 'Prénom 4', email: 'prenom4@noel-flix.fr', color: '#C4621F', ink: '#FFFFFF' },
-  { id: 'prenom5', name: 'Prénom 5', email: 'prenom5@noel-flix.fr', color: '#2F7D4F', ink: '#FFFFFF' },
+  { id: 'papa', name: 'Papa', email: 'papa@noel-flix.fr', color: '#2B6F94', ink: '#FFFFFF' },
+  { id: 'maman', name: 'Maman', email: 'maman@noel-flix.fr', color: '#F2B134', ink: '#24302A' },
+  { id: 'max', name: 'Max', email: 'max@noel-flix.fr', color: '#6E4596', ink: '#FFFFFF' },
+  { id: 'ana', name: 'Ana', email: 'ana@noel-flix.fr', color: '#C4621F', ink: '#FFFFFF' },
+  { id: 'wiwi', name: 'Wiwi', email: 'wiwi@noel-flix.fr', color: '#2F7D4F', ink: '#FFFFFF' },
 ];
 
 // GIF de Noël GIPHY (version 200 px de haut, légère sur mobile), tirés au hasard à chaque visite.

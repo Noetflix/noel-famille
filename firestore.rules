@@ -12,11 +12,11 @@ service cloud.firestore {
     function members() {
       return [
         'romain.flix@noel-flix.fr',
-        'prenom1@noel-flix.fr',
-        'prenom2@noel-flix.fr',
-        'prenom3@noel-flix.fr',
-        'prenom4@noel-flix.fr',
-        'prenom5@noel-flix.fr'
+        'papa@noel-flix.fr',
+        'maman@noel-flix.fr',
+        'max@noel-flix.fr',
+        'ana@noel-flix.fr',
+        'wiwi@noel-flix.fr'
       ];
     }
 
